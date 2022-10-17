@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">holidays</string>
+
+    // MainActivity
+    <string name="searchCity">Entrez votre localisation</string>
+    <string name="exemplePlace">Ex: Paris</string>
+    <string name="searchButton">Rechercher</string>
 </resources>
