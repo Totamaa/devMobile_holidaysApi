@@ -19,7 +19,7 @@ public class Holidays {
 
     public Holidays(String location, String scolarYear, String typeHolidays, String dateStartString, String sateEndString, String zone, String population) {
         this.location = location;
-        this.scolarYear = scolarYear.substring(0, 5);
+        this.scolarYear = scolarYear;
         this.typeHolidays = typeHolidays;
 
         // date

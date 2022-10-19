@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import org.json.*;
 
+import java.io.Console;
+import java.io.FileWriter;
 import java.lang.StringBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.lang.Thread;
 import java.lang.Runnable;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import JavaClass.Holidays;
 
@@ -46,20 +49,6 @@ public class HomeActivity extends AppCompatActivity {
         place_textView.setText(place.substring(0, 1).toUpperCase() + place.substring(1).toLowerCase());
         // Log.i("place", place);
         getJson();
-        try
-        {
-            JSONArray tabJson = new JSONArray(data);
-            if (tabJson != null)
-            {
-                for (int i = 0; i < tabJson.length(); i++)
-                {
-                    JSONObject vacation = tabJson.getJSONObject(i).getJSONObject("fields");
-                    Log.i("obj", vacation.toString());
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -77,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
             public void run() {
                 data = "";
                 try {
-                    URL holidays_url = new URL("https://www.data.gouv.fr/fr/datasets/r/000ae493-9fa8-4088-9f53-76d375204036");
+                    URL holidays_url = new URL("https://data.education.gouv.fr/explore/dataset/fr-en-calendrier-scolaire/download?format=json&timezone=Europe/Berlin&use_labels_for_header=false");
                     HttpURLConnection conn = (HttpURLConnection) holidays_url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.addRequestProperty("content-type", "application/json");
@@ -90,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     sc.close();
                     System.out.println(conn.getResponseCode());
-                    Log.i("test", data);
+                    // System.out.println(data);
                     conn.disconnect();
                 } catch (ProtocolException e) {
                     e.printStackTrace();
@@ -99,8 +88,32 @@ public class HomeActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
+                try
+                {
+                    JSONArray tabJson = new JSONArray(data);
+                    if (tabJson != null)
+                    {
+                        for (int i = 0; i < tabJson.length(); i++)
+                        {
+                            JSONObject vacation = tabJson.getJSONObject(i).getJSONObject("fields");
+                            // System.out.println(vacation.getString("location"));
+                            Holidays holidays = new Holidays(
+                                    vacation.getString("location"),
+                                    vacation.getString("annee_scolaire"),
+                                    vacation.getString("description"),
+                                    vacation.getString("start_date"),
+                                    vacation.getString("end_date"),
+                                    vacation.getString("zones"),
+                                    vacation.getString("population")
+                            );
+                            System.out.println(holidays.getScolarYear());
+                            // holidaysArrayList.add(holidays);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                // holidaysArrayList.get(0).toString();
             }
         });
 
