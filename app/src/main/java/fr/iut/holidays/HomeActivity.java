@@ -25,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.lang.Thread;
 import java.lang.Runnable;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView place_textView;
     String data;
-    ArrayList<Holidays> holidaysArrayList;
+    ArrayList<Holidays> holidaysArrayList  = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,11 @@ public class HomeActivity extends AppCompatActivity {
         String place = intent.getStringExtra("place");
         place_textView.setText(place.substring(0, 1).toUpperCase() + place.substring(1).toLowerCase());
         // Log.i("place", place);
-        getJson();
+        getJson(place);
+
+
+
+
 
     }
 
@@ -57,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
         place_textView = findViewById(R.id.place_textView);
     }
 
-    private void getJson()
+    private void getJson(String place)
     {
         Thread thread = new Thread(new Runnable()
         {
@@ -106,14 +111,27 @@ public class HomeActivity extends AppCompatActivity {
                                     vacation.getString("zones"),
                                     vacation.getString("population")
                             );
-                            System.out.println(holidays.getScolarYear());
-                            // holidaysArrayList.add(holidays);
+                            //System.out.println(holidays.getScolarYear());
+                            if (holidays.getScolarYear().equals("2021-2022")){
+                                holidaysArrayList.add(holidays);
+                            }
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // holidaysArrayList.get(0).toString();
+
+
+                for(Holidays h : holidaysArrayList )
+                {
+                    if (place.equals(h.getLocation().toLowerCase()) )
+                    {
+                        //Log.i("tg", h.getStartDate().toString());
+                        System.out.println(h.getStartDate().DAY_OF_WEEK+ "/"+h.getStartDate().MONTH);
+
+                    }
+                }
+
             }
         });
 

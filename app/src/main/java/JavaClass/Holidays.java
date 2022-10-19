@@ -1,5 +1,7 @@
 package JavaClass;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,13 +28,14 @@ public class Holidays {
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         try
         {
-            Date dateStart = formatDate.parse(dateStartString);
+            Date dateStart = formatDate.parse(dateStartString.substring(0,10));
             Calendar startDate = Calendar.getInstance();
             startDate.setTime(dateStart);
 
+
             Date dateEnd = formatDate.parse(sateEndString);
             Calendar endDate = Calendar.getInstance();
-            startDate.setTime(dateEnd);
+            endDate.setTime(dateEnd);
         }
         catch (ParseException e)
         {
@@ -109,8 +112,8 @@ public class Holidays {
                 "location='" + location + '\'' +
                 ", scolarYear='" + scolarYear + '\'' +
                 ", typeHolidays='" + typeHolidays + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", startDate=" + startDate.toString() +
+                ", endDate=" + endDate.toString() +
                 ", zone='" + zone + '\'' +
                 ", population='" + population + '\'' +
                 '}';
