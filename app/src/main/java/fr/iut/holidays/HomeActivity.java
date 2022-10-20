@@ -41,6 +41,7 @@ import JavaClass.Holidays;
 public class HomeActivity extends AppCompatActivity {
 
     TextView place_textView;
+    TextView timeBeforeNextHolidays;
     String data;
     ArrayList<Holidays> holidaysArrayList = new ArrayList<>();
     ArrayList<String> holidaysType = new ArrayList<>();
@@ -70,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initComponent() {
         place_textView = findViewById(R.id.place_textView);
+        timeBeforeNextHolidays = findViewById(R.id.timeBeforeNextHolidays);
     }
 
     private void getJson(String place) {
@@ -128,8 +130,11 @@ public class HomeActivity extends AppCompatActivity {
 
                 long max = 365;
                 long temp;
-                int i=0;
-                int j=0;
+                long delay = 0;
+                int i = 0;
+                int j = 0;
+                String libelle = "";
+
 
                 Calendar today = Calendar.getInstance();
                 for (Holidays h : holidaysArrayList) {
@@ -138,15 +143,28 @@ public class HomeActivity extends AppCompatActivity {
 
                     temp = daysBetween(today, h.getStartDate());
 
-                    if (temp > 0 && temp < max){
+                    if (temp > 0 && temp < max) {
                         j = i;
                         max = temp;
+                        delay = daysBetween(today, h.getStartDate());
+                        libelle = h.getTypeHolidays();
                     }
                     i++;
                 }
+                final long finaldelay = delay;
+                final String finaltype = libelle;
 
                 Log.i("TYPEVACANCES", holidaysArrayList.get(j).getTypeHolidays());
+                Log.i("tostring", Long.toString(delay));
 
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        timeBeforeNextHolidays.setText(finaltype + "dans " + Long.toString(finaldelay) + "jour(s)");
+
+                    }
+                });
             }
         });
 
