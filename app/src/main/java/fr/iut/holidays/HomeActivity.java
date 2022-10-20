@@ -56,7 +56,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String place = intent.getStringExtra("place");
         place_textView.setText(place.substring(0, 1).toUpperCase() + place.substring(1).toLowerCase());
-        // Log.i("place", place);
         getJson(place);
 
         holidaysType.add("Vacances d'Été");
@@ -118,8 +117,11 @@ public class HomeActivity extends AppCompatActivity {
                                     vacation.getString("zones"),
                                     vacation.getString("population"));
                             // System.out.println(holidays.getScolarYear());
-                            if (holidays.getScolarYear().equals("2022-2023") && holidays.getPopulation().equals("-")
-                                    && place.equals(holidays.getLocation().toLowerCase())) {
+                            if (holidays.getScolarYear().equals("2022-2023")
+                                    && holidays.getPopulation().equals("-")
+                                    && place.equals(holidays.getLocation().toLowerCase())
+                            )
+                            {
                                 holidaysArrayList.add(holidays);
                             }
                         }
@@ -138,12 +140,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 Calendar today = Calendar.getInstance();
                 for (Holidays h : holidaysArrayList) {
-                    Log.i("holidays", h.toString());
-                    System.out.println(daysBetween(today, h.getStartDate()));
-
                     temp = daysBetween(today, h.getStartDate());
-
-                    if (temp > 0 && temp < max) {
+                    System.out.println(h.toString());
+                    if (temp > 0 && temp < max){
                         j = i;
                         max = temp;
                         delay = daysBetween(today, h.getStartDate());
@@ -171,7 +170,8 @@ public class HomeActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public static long daysBetween(Calendar startDate, Calendar endDate) {
+    public static long daysBetween(Calendar startDate, Calendar endDate)
+    {
         long start = startDate.getTimeInMillis();
         long end = endDate.getTimeInMillis();
         return TimeUnit.MILLISECONDS.toDays(end - start);
