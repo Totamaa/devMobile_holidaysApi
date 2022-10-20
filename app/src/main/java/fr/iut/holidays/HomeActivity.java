@@ -65,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String place = intent.getStringExtra("place");
-        place_textView.setText(place.substring(0, 1).toUpperCase() + place.substring(1).toLowerCase());
+        place_textView.setText("Académie : "+place.substring(0, 1).toUpperCase() + place.substring(1).toLowerCase());
         getJson(place);
 
         holidaysType.add("Vacances d'Été");
