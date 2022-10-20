@@ -2,10 +2,13 @@ package JavaClass;
 
 import android.util.Log;
 
+import java.io.Console;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Objects;
 
 public class Holidays {
     String location;
@@ -25,25 +28,21 @@ public class Holidays {
         this.typeHolidays = typeHolidays;
 
         // date
-        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        Calendar dateStart = Calendar.getInstance();
+        Calendar dateEnd = Calendar.getInstance();
         try
         {
-            Date dateStart = formatDate.parse(dateStartString.substring(0,10));
-            Calendar startDate = Calendar.getInstance();
-            startDate.setTime(dateStart);
-
-
-            Date dateEnd = formatDate.parse(sateEndString);
-            Calendar endDate = Calendar.getInstance();
-            endDate.setTime(dateEnd);
+            dateStart.setTime(Objects.requireNonNull(formatDate.parse(dateStartString)));
+            dateEnd.setTime(Objects.requireNonNull(formatDate.parse(sateEndString)));
         }
         catch (ParseException e)
         {
             e.printStackTrace();
         }
 
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = dateStart;
+        this.endDate = dateEnd;
 
 
         this.zone = zone.substring(5);
@@ -112,8 +111,8 @@ public class Holidays {
                 "location='" + location + '\'' +
                 ", scolarYear='" + scolarYear + '\'' +
                 ", typeHolidays='" + typeHolidays + '\'' +
-                ", startDate=" + startDate.toString() +
-                ", endDate=" + endDate.toString() +
+                ", startDate='" + startDate.toString() + '\'' +
+                ", endDate='" + endDate.toString() + '\'' +
                 ", zone='" + zone + '\'' +
                 ", population='" + population + '\'' +
                 '}';
