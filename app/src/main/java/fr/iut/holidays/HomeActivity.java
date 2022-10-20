@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -24,7 +25,9 @@ import java.net.HttpURLConnection;
 
 import java.lang.Thread;
 import java.lang.Runnable;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -37,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     TextView place_textView;
     String data;
     ArrayList<Holidays> holidaysArrayList  = new ArrayList<>();
+    ArrayList<String> holidaysType = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,13 @@ public class HomeActivity extends AppCompatActivity {
         // Log.i("place", place);
         getJson(place);
 
-
+        holidaysType.add("Vacances d'Été");
+        holidaysType.add("Vacances de Printemps");
+        holidaysType.add("Pont de l'Ascension");
+        holidaysType.add("Vacances de Pâques");
+        holidaysType.add("Vacances d'Hiver");
+        holidaysType.add("Vacances de Noël");
+        holidaysType.add("Vacances de la Toussaint");
 
 
 
@@ -122,12 +132,16 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
 
+                Calendar today = Calendar.getInstance();
+
                 for(Holidays h : holidaysArrayList )
                 {
                     if (place.equals(h.getLocation().toLowerCase()) )
                     {
                         //Log.i("tg", h.getStartDate().toString());
-                        System.out.println(h.getStartDate().DAY_OF_WEEK+ "/"+h.getStartDate().MONTH);
+                        //System.out.println(h.getStartDate().DAY_OF_WEEK+ "/"+h.getStartDate().MONTH);
+
+                        int daysBetween = ChronoUnit.DAYS.between(today, h.getStartDate());
 
                     }
                 }
