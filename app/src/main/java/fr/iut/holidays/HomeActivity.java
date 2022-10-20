@@ -135,10 +135,19 @@ public class HomeActivity extends AppCompatActivity {
 
                 Calendar today = Calendar.getInstance();
 
+                ArrayList<Holidays> restrictedHolidays = new ArrayList<>();
+
                 for(Holidays h : holidaysArrayList )
                 {
-                    Log.i("holidyas", h.toString());
+                    //Log.i("holidays", h.toString());
+                    if (place == h.getLocation()){
+                        restrictedHolidays.add(h);
+                    }
+
                 }
+               
+
+
             }
         });
 
