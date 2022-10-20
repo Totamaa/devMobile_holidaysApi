@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.*;
@@ -25,6 +26,7 @@ import java.net.HttpURLConnection;
 
 import java.lang.Thread;
 import java.lang.Runnable;
+import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
@@ -42,6 +44,14 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView place_textView;
     TextView timeBeforeNextHolidays;
+    TextView textToussaint;
+    TextView textNoel;
+    TextView textHiver;
+    TextView textPaques;
+    TextView textEte;
+    ProgressBar progressBar;
+
+
     String data;
     ArrayList<Holidays> holidaysArrayList = new ArrayList<>();
     ArrayList<String> holidaysType = new ArrayList<>();
@@ -71,6 +81,12 @@ public class HomeActivity extends AppCompatActivity {
     private void initComponent() {
         place_textView = findViewById(R.id.place_textView);
         timeBeforeNextHolidays = findViewById(R.id.timeBeforeNextHolidays);
+        textToussaint = findViewById(R.id.textToussaint);
+        textNoel = findViewById(R.id.textNoel);
+        textHiver = findViewById(R.id.textHiver);
+        textPaques = findViewById(R.id.textPaques);
+        textEte = findViewById(R.id.textEte);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void getJson(String place) {
@@ -136,31 +152,106 @@ public class HomeActivity extends AppCompatActivity {
                 int i = 0;
                 int j = 0;
                 String libelle = "";
+                int upperInterv = 0;
 
-
-                Calendar today = Calendar.getInstance();
+                final Calendar today = Calendar.getInstance();
                 for (Holidays h : holidaysArrayList) {
                     temp = daysBetween(today, h.getStartDate());
                     System.out.println(h.toString());
                     if (temp > 0 && temp < max){
                         j = i;
                         max = temp;
-                        delay = daysBetween(today, h.getStartDate());
+                        delay = daysBetween(today, h.getStartDate())+1;
                         libelle = h.getTypeHolidays();
+                        upperInterv = h.getStartDate().get(Calendar.DAY_OF_YEAR);
                     }
                     i++;
                 }
                 final long finaldelay = delay;
                 final String finaltype = libelle;
+                final int finalUpperInterv = upperInterv;
 
                 Log.i("TYPEVACANCES", holidaysArrayList.get(j).getTypeHolidays());
                 Log.i("tostring", Long.toString(delay));
 
                 runOnUiThread(new Runnable() {
-
+                    int currentProgress;
                     @Override
                     public void run() {
-                        timeBeforeNextHolidays.setText(finaltype + "dans " + Long.toString(finaldelay) + "jour(s)");
+
+                        System.out.println(( (70 - finaldelay)/70)*100);
+
+                        currentProgress = (int)(( (70 - finaldelay)/70)*100);
+                        progressBar.setProgress(currentProgress);
+                        progressBar.setMax(100);
+
+                        timeBeforeNextHolidays.setText(finaltype + " dans " + Long.toString(finaldelay) + "jour(s)");
+
+                        Collator collator  = Collator.getInstance();
+                        collator.setStrength(Collator.NO_DECOMPOSITION);
+
+                        int i = 0;
+                        for(Holidays h : holidaysArrayList)
+                        {
+                            if(collator.compare(h.getTypeHolidays().toLowerCase(), "Vacances de la Toussaint".toLowerCase()) == 0) {
+                                int month = holidaysArrayList.get(i).getStartDate().get(Calendar.MONTH)+1;
+                                textToussaint.setText(
+                                        holidaysArrayList.get(i).getTypeHolidays() + " : " +
+                                        holidaysArrayList.get(i).getStartDate().get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + holidaysArrayList.get(i).getStartDate().get(Calendar.YEAR));
+                            }
+                            i++;
+                        }
+
+                        i=0;
+                        for(Holidays h : holidaysArrayList)
+                        {
+                            if(collator.compare(h.getTypeHolidays().toLowerCase(), "Vacances de Noël".toLowerCase()) == 0) {
+                                int month = holidaysArrayList.get(i).getStartDate().get(Calendar.MONTH)+1;
+                                textNoel.setText(
+                                        holidaysArrayList.get(i).getTypeHolidays() + " : " +
+                                        holidaysArrayList.get(i).getStartDate().get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + holidaysArrayList.get(i).getStartDate().get(Calendar.YEAR));
+                            }
+                            i++;
+                        }
+
+                        i=0;
+                        for(Holidays h : holidaysArrayList)
+                        {
+                            if(collator.compare(h.getTypeHolidays().toLowerCase(), "Vacances d'Hiver".toLowerCase()) == 0) {
+                                int month = holidaysArrayList.get(i).getStartDate().get(Calendar.MONTH)+1;
+                                textHiver.setText(
+                                        holidaysArrayList.get(i).getTypeHolidays() + " : " +
+                                                holidaysArrayList.get(i).getStartDate().get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + holidaysArrayList.get(i).getStartDate().get(Calendar.YEAR));
+                            }
+                            i++;
+                        }
+
+                        i=0;
+                        for(Holidays h : holidaysArrayList)
+                        {
+                            if(collator.compare(h.getTypeHolidays().toLowerCase(), "Vacances de Printemps".toLowerCase()) == 0) {
+                                int month = holidaysArrayList.get(i).getStartDate().get(Calendar.MONTH)+1;
+                                textPaques.setText(
+                                        holidaysArrayList.get(i).getTypeHolidays() + " : " +
+                                                holidaysArrayList.get(i).getStartDate().get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + holidaysArrayList.get(i).getStartDate().get(Calendar.YEAR));
+                            }
+                            i++;
+                        }
+
+                        i=0;
+                        for(Holidays h : holidaysArrayList)
+                        {
+                            if(collator.compare(h.getTypeHolidays().toLowerCase(), "Début des Vacances d'Été".toLowerCase()) == 0) {
+                                int month = holidaysArrayList.get(i).getStartDate().get(Calendar.MONTH)+1;
+                                textEte.setText(
+                                        holidaysArrayList.get(i).getTypeHolidays() + " : " +
+                                                holidaysArrayList.get(i).getStartDate().get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + holidaysArrayList.get(i).getStartDate().get(Calendar.YEAR));
+                            }
+                            i++;
+                        }
+
+
+
 
                     }
                 });
