@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray recordsJson = new JSONArray(jsonObject.getJSONArray("records").toString());
                     JSONObject objectTabJson = new JSONObject(recordsJson.getJSONObject(0).toString());
                     JSONObject fieldsJson = new JSONObject(objectTabJson.getJSONObject("fields").toString());
-                    System.out.println(fieldsJson.toString());
                     academie = fieldsJson.getString("libelle_academie");
                 } catch (JSONException e) {
                     e.printStackTrace();
