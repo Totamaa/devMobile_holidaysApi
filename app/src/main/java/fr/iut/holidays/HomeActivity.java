@@ -25,9 +25,12 @@ import java.net.HttpURLConnection;
 
 import java.lang.Thread;
 import java.lang.Runnable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -123,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
                                     vacation.getString("population")
                             );
                             //System.out.println(holidays.getScolarYear());
-                            if (holidays.getScolarYear().equals("2021-2022") && holidays.getPopulation().equals("-") && place.equals(holidays.getLocation().toLowerCase())){
+                            if (holidays.getScolarYear().equals("2022-2023") && holidays.getPopulation().equals("-") && place.equals(holidays.getLocation().toLowerCase())){
                                 holidaysArrayList.add(holidays);
                             }
                         }
@@ -134,10 +137,10 @@ public class HomeActivity extends AppCompatActivity {
 
 
                 Calendar today = Calendar.getInstance();
-
                 for(Holidays h : holidaysArrayList )
                 {
                     Log.i("holidyas", h.toString());
+                    System.out.println(daysBetween(today, h.getStartDate()));
                 }
             }
         });
@@ -149,6 +152,6 @@ public class HomeActivity extends AppCompatActivity {
     {
         long start = startDate.getTimeInMillis();
         long end = endDate.getTimeInMillis();
-        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+        return TimeUnit.MILLISECONDS.toDays(end - start);
     }
 }
