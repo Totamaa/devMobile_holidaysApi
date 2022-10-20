@@ -126,11 +126,26 @@ public class HomeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                long max = 365;
+                long temp;
+                int i=0;
+                int j=0;
+
                 Calendar today = Calendar.getInstance();
                 for (Holidays h : holidaysArrayList) {
-                    Log.i("holidyas", h.toString());
+                    Log.i("holidays", h.toString());
                     System.out.println(daysBetween(today, h.getStartDate()));
+
+                    temp = daysBetween(today, h.getStartDate());
+
+                    if (temp > 0 && temp < max){
+                        j = i;
+                        max = temp;
+                    }
+                    i++;
                 }
+
+                Log.i("TYPEVACANCES", holidaysArrayList.get(j).getTypeHolidays());
 
             }
         });
