@@ -25,9 +25,12 @@ import java.net.HttpURLConnection;
 
 import java.lang.Thread;
 import java.lang.Runnable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -35,12 +38,11 @@ import java.util.stream.Collectors;
 
 import JavaClass.Holidays;
 
-
 public class HomeActivity extends AppCompatActivity {
 
     TextView place_textView;
     String data;
-    ArrayList<Holidays> holidaysArrayList  = new ArrayList<>();
+    ArrayList<Holidays> holidaysArrayList = new ArrayList<>();
     ArrayList<String> holidaysType = new ArrayList<>();
 
     @Override
@@ -64,33 +66,28 @@ public class HomeActivity extends AppCompatActivity {
         holidaysType.add("Vacances de Noël");
         holidaysType.add("Vacances de la Toussaint");
 
-
-
     }
 
-    private void initComponent()
-    {
+    private void initComponent() {
         place_textView = findViewById(R.id.place_textView);
     }
 
-    private void getJson(String place)
-    {
-        Thread thread = new Thread(new Runnable()
-        {
+    private void getJson(String place) {
+        Thread thread = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 data = "";
                 try {
-                    URL holidays_url = new URL("https://data.education.gouv.fr/explore/dataset/fr-en-calendrier-scolaire/download?format=json&timezone=Europe/Berlin&use_labels_for_header=false");
+                    URL holidays_url = new URL(
+                            "https://data.education.gouv.fr/explore/dataset/fr-en-calendrier-scolaire/download?format=json&timezone=Europe/Berlin&use_labels_for_header=false");
                     HttpURLConnection conn = (HttpURLConnection) holidays_url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.addRequestProperty("content-type", "application/json");
                     conn.connect();
                     InputStream inputStream = conn.getInputStream();
                     Scanner sc = new Scanner(inputStream);
-                    while (sc.hasNextLine())
-                    {
+                    while (sc.hasNextLine()) {
                         data += sc.nextLine();
                     }
                     sc.close();
@@ -104,13 +101,10 @@ public class HomeActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try
-                {
+                try {
                     JSONArray tabJson = new JSONArray(data);
-                    if (tabJson != null)
-                    {
-                        for (int i = 0; i < tabJson.length(); i++)
-                        {
+                    if (tabJson != null) {
+                        for (int i = 0; i < tabJson.length(); i++) {
                             JSONObject vacation = tabJson.getJSONObject(i).getJSONObject("fields");
                             // System.out.println(vacation.getString("location"));
                             Holidays holidays = new Holidays(
@@ -120,10 +114,10 @@ public class HomeActivity extends AppCompatActivity {
                                     vacation.getString("start_date"),
                                     vacation.getString("end_date"),
                                     vacation.getString("zones"),
-                                    vacation.getString("population")
-                            );
-                            //System.out.println(holidays.getScolarYear());
-                            if (holidays.getScolarYear().equals("2021-2022") && holidays.getPopulation().equals("-") && place.equals(holidays.getLocation().toLowerCase())){
+                                    vacation.getString("population"));
+                            // System.out.println(holidays.getScolarYear());
+                            if (holidays.getScolarYear().equals("2022-2023") && holidays.getPopulation().equals("-")
+                                    && place.equals(holidays.getLocation().toLowerCase())) {
                                 holidaysArrayList.add(holidays);
                             }
                         }
@@ -132,21 +126,11 @@ public class HomeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-
                 Calendar today = Calendar.getInstance();
-
-                ArrayList<Holidays> restrictedHolidays = new ArrayList<>();
-
-                for(Holidays h : holidaysArrayList )
-                {
-                    //Log.i("holidays", h.toString());
-                    if (place == h.getLocation()){
-                        restrictedHolidays.add(h);
-                    }
-
+                for (Holidays h : holidaysArrayList) {
+                    Log.i("holidyas", h.toString());
+                    System.out.println(daysBetween(today, h.getStartDate()));
                 }
-               
-
 
             }
         });
@@ -154,10 +138,9 @@ public class HomeActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public static long daysBetween(Calendar startDate, Calendar endDate)
-    {
+    public static long daysBetween(Calendar startDate, Calendar endDate) {
         long start = startDate.getTimeInMillis();
         long end = endDate.getTimeInMillis();
-        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+        return TimeUnit.MILLISECONDS.toDays(end - start);
     }
 }
